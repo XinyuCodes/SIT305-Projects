@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Conversion Calculator</string>
+    <string-array name="currency_array">
+        <item>USD</item>
+        <item>AUD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+    </string-array>
+    <string-array name="fuel_array">
+        <item>Miles per Gallon</item>
+        <item>Kilometers per Liter</item>
+        <item>Gallon</item>
+        <item>Liter</item>
+        <item>Nautical Miles</item>
+        <item>Kilometers</item>
+    </string-array>
+    <string-array name="temp_array">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+        <item>Kelvin</item>
+    </string-array>
+</resources>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title Bar -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#6200EE"
+        android:text="Currency Converter"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- From Currency Row -->
+    <LinearLayout
+        android:id="@+id/currencyInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/currencyInput1"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/currencyInputUnit"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!-- To Currency Row -->
+
+    <!-- Convert Button -->
+    <LinearLayout
+        android:id="@+id/currencyOutput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/currencyOutput1"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+        <Spinner
+            android:id="@+id/currencyOutputUnit"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/convertCurrencyButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Convert" />
+
+    <LinearLayout
+        android:id="@+id/fuelInput"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/fuelInput1"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/fuelInputUnit"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1"
+            android:textAlignment="viewStart" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fuelOutput"
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/fuelOutput1"
+            android:layout_width="194dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="Enter an amount first"
+            android:inputType="numberDecimal"
+            android:textAlignment="center" />
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/toFuelUnit"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="65dp"-->
+<!--            android:layout_weight="1" />-->
+
+        <TextView
+            android:id="@+id/fuelOutputUnit"
+            android:layout_width="150dp"
+            android:layout_height="63dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="Select a unit first"
+            android:inputType="numberDecimal"
+            android:textAlignment="textStart" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/convertFuelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Convert" />
+
+    <!-- From Currency Row -->
+    <LinearLayout
+        android:id="@+id/tempInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/tempInput1"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="Enter amount"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/tempInputUnit"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!-- To Currency Row -->
+    <!-- Temperature conversion-->
+    <!-- Convert Button -->
+
+    <LinearLayout
+        android:id="@+id/tempOutput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tempOutput1"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="24sp" />
+
+        <Spinner
+            android:id="@+id/tempOutputUnit"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/convertTemperatureButton"
+        android:layout_width="381dp"
+        android:layout_height="wrap_content"
+        android:text="Convert" />
+
+
+</LinearLayout>
+
+    <!-- To Currency Row -->
+
+    <!-- Convert Button -->
+    <!-- To Currency Row -->
+
+    <!-- Convert Button -->
