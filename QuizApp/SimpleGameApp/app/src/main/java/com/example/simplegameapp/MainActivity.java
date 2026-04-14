@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setMax(3);
         progressBar.setProgress(0);
         progressBar.setProgress(currentQuestionIndex);
-        tvProgress.setText(displayQuestion + "/" + 3);
+        tvProgress.setText("Question" + displayQuestion + "/" + 3);
         //doing the initial load of questions
         loadQuestion();
         //main part of quiz
