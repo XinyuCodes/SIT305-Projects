@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".HomeFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Category Chips -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCategories"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp" />
+
+            <!-- Search bar -->
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="8dp"
+                android:iconifiedByDefault="false"/>
+
+            <!-- Featured Matches -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Featured Matches"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFeaturedMatches"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="2dp"
+                android:scrollbars="horizontal"
+                android:scrollbarSize="4dp"
+                android:fadeScrollbars="false"
+                android:scrollbarThumbHorizontal="@android:color/darker_gray"
+                android:overScrollMode="always"/>
+
+            <!-- Latest News -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Latest News"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvLatestNews"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="2dp"
+                android:scrollbars="vertical"
+                android:scrollbarSize="4dp"
+                android:scrollbarThumbVertical="@android:color/darker_gray"
+                android:overScrollMode="always"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
