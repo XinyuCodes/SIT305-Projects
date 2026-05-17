@@ -1,10 +1,16 @@
 package com.example.lostandfound;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +19,14 @@ import android.widget.ListPopupWindow;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.Priority;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -41,12 +54,14 @@ public class CreateAdvertActivity extends AppCompatActivity {
     private EditText enterName, enterPhone, enterDescription, enterDate, enterLocation;
     private Spinner categorySpinner;
     private ImageView imagePreview;
-    private Button uploadImageButton, submitButton;
-    private double selectedLat, selectedLng;
+    private Button uploadImageButton, submitButton, currentLocationButton;
+    private double selectedLat = 0, selectedLng = 0;
 
     private Uri selectedImageUri;
     private DatabaseHelper databaseHelper;
+    private FusedLocationProviderClient clientLocation;
     private static final int IMAGE_PICK_CODE = 1;
+    private static final int LOCATION_PERMISSION_CODE = 100;
     private static final String API_KEY = "AIzaSyDQ-aiDUDXsvp_hSexSP-G4F61_X3_DmGg";
 
     @Override
@@ -66,6 +81,7 @@ public class CreateAdvertActivity extends AppCompatActivity {
         imagePreview = findViewById(R.id.imagePreview);
         uploadImageButton = findViewById(R.id.uploadImageButton);
         submitButton = findViewById(R.id.submitButton);
+        currentLocationButton = findViewById(R.id.currentLocationButton);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
@@ -74,6 +90,23 @@ public class CreateAdvertActivity extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
+
+        clientLocation = LocationServices.getFusedLocationProviderClient(this);
+
+        // Check for location permission and fetch location
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+        } else {
+            fetchCurrentLocation();
+        }
+
+        currentLocationButton.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_CODE);
+            } else {
+                fetchCurrentLocationAndFillAddress();
+            }
+        });
 
         // set up dropdown
         dropdownPopup = new ListPopupWindow(this);
@@ -152,11 +185,85 @@ public class CreateAdvertActivity extends AppCompatActivity {
         });
     }
 
-    private void searchLocation(String query) {
-        String url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?input="
-                + Uri.encode(query) + "&key=" + API_KEY;
+    private void fetchCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // Try last location first for quick response
+            clientLocation.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null && selectedLat == 0 && selectedLng == 0) {
+                    selectedLat = location.getLatitude();
+                    selectedLng = location.getLongitude();
+                }
+            });
 
-        Request request = new Request.Builder().url(url).build();
+            // Request fresh location
+            clientLocation.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener(location -> {
+                        if (location != null) {
+                            selectedLat = location.getLatitude();
+                            selectedLng = location.getLongitude();
+                            Log.d("LOCATION", "Got lat: " + selectedLat + " lng: " + selectedLng);
+                        }
+                    });
+        }
+    }
+
+    private void fetchCurrentLocationAndFillAddress() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        clientLocation.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener(location -> {
+            if (location != null) {
+                selectedLat = location.getLatitude();
+                selectedLng = location.getLongitude();
+
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    geocoder.getFromLocation(selectedLat, selectedLng, 1, addresses -> {
+                        if (addresses != null && !addresses.isEmpty()) {
+                            runOnUiThread(() -> enterLocation.setText(addresses.get(0).getAddressLine(0)));
+                        }
+                    });
+                } else {
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(selectedLat, selectedLng, 1);
+                        if (addresses != null && !addresses.isEmpty()) {
+                            enterLocation.setText(addresses.get(0).getAddressLine(0));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Could not get location, try again", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fetchCurrentLocation();
+            } else {
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void searchLocation(String query) {
+        Log.d("LOCATION", "Searching with lat: " + selectedLat + " lng: " + selectedLng);
+        StringBuilder urlBuilder = new StringBuilder("https://maps.googleapis.com/maps/api/place/autocomplete/json?input=");
+        urlBuilder.append(Uri.encode(query));
+        
+        // Add 10km bias if we have valid coordinates
+        if (selectedLat != 0.0 || selectedLng != 0.0) {
+            urlBuilder.append("&locationbias=circle:10000@").append(selectedLat).append(",").append(selectedLng);
+        }
+        
+        urlBuilder.append("&key=").append(API_KEY);
+
+        Request request = new Request.Builder().url(urlBuilder.toString()).build();
         httpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -220,6 +327,7 @@ public class CreateAdvertActivity extends AppCompatActivity {
                                 .getJSONObject("location");
                         selectedLat = location.getDouble("lat");
                         selectedLng = location.getDouble("lng");
+                        Log.d("LOCATION", "Selected Place Lat: " + selectedLat + " Lng: " + selectedLng);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
